@@ -12,6 +12,8 @@ from sqlalchemy import create_engine, func
 engine = create_engine("sqlite:///Resources/hawaii.sqlite", echo = False)
 Base = automap_base()
 Base.prepare(engine, reflect = True)
+
+# Save table references
 Station = Base.classes.station
 Measurements = Base.classes.measurements
 
