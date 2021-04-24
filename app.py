@@ -17,6 +17,9 @@ Base.prepare(engine, reflect = True)
 Station = Base.classes.station
 Measurements = Base.classes.measurements
 
+# Create our session between Python and database
+session = Session(engine)
+
 #Create an app
 app = Flask(__name__)
 
