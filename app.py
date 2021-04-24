@@ -15,7 +15,7 @@ Base.prepare(engine, reflect = True)
 
 # Save table references
 Station = Base.classes.station
-Measurements = Base.classes.measurements
+Measurement = Base.classes.measurement
 
 # Create our session between Python and database
 session = Session(engine)
@@ -41,15 +41,18 @@ def precipitation():
     last_date = session.query(Measurement.date).order_by(Measurement.date.desc()).first()
     year_ago = dt.date(2017,8,23) - dt.timedelta(days = 365)
 
-    precipitation = session.query(Measurement.date, Measurement.prcp).\
+    prcp = session.query(Measurement.date, Measurement.prcp).\
         filter(Measurement.date > year_ago).\
         order_by(Measurement.date).all()
 
-
-
-
-
-
+# Create a list of dicts with `date` and `prcp` as the keys and values
+    prcp_total = []
+    for result in prcp:
+        row = {}
+        row["date"] = prcp[0]
+        row["prcp"] = prcp[1]
+        prcp_total.append(row)
+    return jsonify(prcp_total)
 
 # Define main behavior
 if __name__ == '__main__':
