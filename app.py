@@ -52,9 +52,13 @@ def precipitation():
         prcp_total.append(row)
     return jsonify(prcp_total)
 
-# Define main behavior
+@app.route("/api/v1.0/stations")
+def stations():
+    session = Session(engine)
+    results = session.query(Station.station).all()
+    session.close()
+    all_stations = list(np.ravel(results))
+    return jsonify(results)
+
 if __name__ == '__main__':
-     app.run(debug=True) 
-
-
-
+    app.run(debug=True)
