@@ -60,15 +60,14 @@ def stations():
 
 @app.route("/api/v1.0/tobs")
 def tobs():
-    tobs_results = session.query(Measurement.station, Measurement.date, Measurement.tobs).\
-        filter(Measurement.date.between('2016-08-23', '2017-08-23')).\
+    temps = session.query(Measurement.station, Measurement.date, Measurement.tobs).\
         filter(Measurement.station == 'USC00519281').\
-        order_by(Measurement.date).all()
+        filter(Measurement.date >= '2016-08-23').all()
     tobs_list = []
-    for date, tobs in tobs_results:
+    for i in temps:
         tobs_dict = {}
-        tobs_dict["date"] = date[0]
-        tobs_dict["tobs"] = tobs[1]
+        tobs_dict["date"] = temps[0]
+        tobs_dict["tobs"] = temps[1]
         tobs_list.append(tobs_dict)
         return jsonify(tobs_list)
 
