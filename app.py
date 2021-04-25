@@ -39,7 +39,6 @@ def home():
 def precipitation():
     # Query last 12 months of precipitation data 
     year_ago = dt.date(2017,8,23) - dt.timedelta(days = 365)
-
     prcp = session.query(Measurement.date, Measurement.prcp).\
         filter(Measurement.date > year_ago).\
         order_by(Measurement.date).all()
@@ -52,13 +51,6 @@ def precipitation():
         row["prcp"] = prcp[1]
         prcp_total.append(row)
     return jsonify(prcp_total)
-
-@app.route("/api/v1.0/stations")
-#Return a JSON list of stations from the dataset.
-    ##station_list = session.query(Stations.station).all()
-   ## station_all = list(np.ravel(results))
-  ##  return jsonify(station_all)
-
 
 # Define main behavior
 if __name__ == '__main__':
