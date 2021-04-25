@@ -45,7 +45,7 @@ def precipitation():
 
 # Create a list of dicts with `date` and `prcp` as the keys and values
     prcp_total = []
-    for result in prcp:
+    for i in prcp:
         row = {}
         row["date"] = prcp[0]
         row["prcp"] = prcp[1]
@@ -54,11 +54,23 @@ def precipitation():
 
 @app.route("/api/v1.0/stations")
 def stations():
-    session = Session(engine)
-    results = session.query(Station.station).all()
-    session.close()
-    all_stations = list(np.ravel(results))
-    return jsonify(results)
+    station_results = session.query(Station.station).all()
+    all_stations = list(np.ravel(station_results))
+    return jsonify(all_stations)
+
+@app.route("/api/v1.0/tobs")
+def tobs():
+    tobs_results = session.query(Measurement.station, Measurement.date, Measurement.tobs).\
+        filter(Measurement.date.between('2016-08-23', '2017-08-23')).\
+        filter(Measurement.station == 'USC00519281').\
+        order_by(Measurement.date).all()
+    tobs_list = []
+    for date, tobs in tobs_results:
+        tobs_dict = {}
+        tobs_dict["date"] = date[0]
+        tobs_dict["tobs"] = tobs[1]
+        tobs_list.append(tobs_dict)
+        return jsonify(tobs_list)
 
 if __name__ == '__main__':
     app.run(debug=True)
