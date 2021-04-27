@@ -47,18 +47,20 @@ def precipitation():
     prcp_total = []
     for i in prcp:
         row = {}
-        row["date"] = prcp[0]
-        row["prcp"] = prcp[1]
+        row["date"] = i[0]
+        row["prcp"] = i[1]
         prcp_total.append(row)
     return jsonify(prcp_total)
 
 @app.route("/api/v1.0/stations")
+# Return a JSON list of stations from the dataset
 def stations():
     station_results = session.query(Station.station).all()
     all_stations = list(np.ravel(station_results))
     return jsonify(all_stations)
 
 @app.route("/api/v1.0/tobs")
+# Query the dates and temperature observations of the most active station for the last year of data
 def tobs():
     temps = session.query(Measurement.station, Measurement.date, Measurement.tobs).\
         filter(Measurement.station == 'USC00519281').\
@@ -66,10 +68,10 @@ def tobs():
     tobs_list = []
     for i in temps:
         tobs_dict = {}
-        tobs_dict["date"] = temps[0]
-        tobs_dict["tobs"] = temps[1]
+        tobs_dict["date"] = i[1]
+        tobs_dict["tobs"] = i[2]
         tobs_list.append(tobs_dict)
-        return jsonify(tobs_list)
+    return jsonify(tobs_list)
 
 if __name__ == '__main__':
     app.run(debug=True)
