@@ -73,5 +73,20 @@ def tobs():
         tobs_list.append(tobs_dict)
     return jsonify(tobs_list)
 
+@app.route("/api/v1.0/<start>")
+def start_date(start):
+    start_query = session.query(func.min(Measurement.tobs), func.max(Measurement.tobs), func.avg(Measurement.tobs)).\
+        filter(Measurement.date >= start).all()
+
+    start_tobs = []
+    for min,avg,max in start_query:
+        start_dict = {}
+        start_dict["Min"] = min
+        start_dict["Max"] = max
+        start_dict["Average"] = avg
+        
+        start_tobs.append(start_dict)
+    return jsonify(start_tobs)
+
 if __name__ == '__main__':
     app.run(debug=True)
